@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Stars</title>
+    <link rel="stylesheet" href="style3.css">
+</head>
+<body>
+    <h1>Catch the Falling Stars 🌟</h1>
+
+    <!-- Canvas for game -->
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+    <p>Use Left/Right Arrow Keys to Move</p>
+    <p id="score">Score: 0</p>
+    <p id="highScore">High Score: 0</p>
+
+    <!-- Difficulty selection before game starts -->
+    <div id="difficultySection">
+        <label for="difficulty">Select Difficulty: </label>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <br>
+        <button id="startButton" onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Restart Game Button after game over -->
+    <button id="restartButton" onclick="restartGame()">Restart Game</button>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let player = { x: 175, y: 450, width: 60, height: 15, speed: 6 }; // Increased speed
+        let stars = [];
+        let score = 0;
+        let highScore = localStorage.getItem("highScore") || 0;
+        let isGameOver = false;
+        let moveLeft = false;
+        let moveRight = false;
+        let starSpeed = 3; // Default speed for easy
+        let gameStarted = false;
+
+        document.getElementById("highScore").textContent = "High Score: " + highScore;
+
+        // Difficulty selection logic
+        document.getElementById("difficulty").addEventListener("change", (e) => {
+            const selectedDifficulty = e.target.value;
+            if (selectedDifficulty === "easy") {
+                starSpeed = -10; // Easy speed
+            } else if (selectedDifficulty === "medium") {
+                starSpeed = -7; // Medium speed
+            } else if (selectedDifficulty === "hard") {
+                starSpeed = -2.5; // Hard speed
+            }
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") {
+                moveLeft = true;
+            } else if (e.key === "ArrowRight") {
+                moveRight = true;
+            }
+        });
+
+        document.addEventListener("keyup", (e) => {
+            if (e.key === "ArrowLeft") {
+                moveLeft = false;
+            } else if (e.key === "ArrowRight") {
+                moveRight = false;
+            }
+        });
+
+        function movePlayer() {
+            if (moveLeft && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (moveRight && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+            }
+        }
+
+        function createStar() {
+            let star = { x: Math.random() * 380, y: 0, size: 10, speed: starSpeed };
+            stars.push(star);
+        }
+
+        function updateGame() {
+            if (isGameOver) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            movePlayer();
+
+            ctx.fillStyle = "yellow";
+            stars.forEach((star, index) => {
+                star.y += star.speed;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (star.y > canvas.height) {
+                    isGameOver = true;
+                    document.getElementById("restartButton").style.display = "block";
+                    document.getElementById("difficultySection").style.display = "block"; // Show difficulty selector
+                }
+
+                if (star.y + star.size > player.y && star.x > player.x && star.x < player.x + player.width) {
+                    score++;
+                    document.getElementById("score").textContent = "Score: " + score;
+                    stars.splice(index, 1);
+                }
+            });
+
+            ctx.fillStyle = "white";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(player.x, player.y, player.width, player.height);
+            ctx.fillStyle = "gray";
+            requestAnimationFrame(updateGame);
+        }
+
+        function checkGameOver() {
+            if (isGameOver) {
+                ctx.fillStyle = "red";
+                ctx.font = "30px Arial";
+                ctx.fillText("Game Over!", canvas.width / 2 - 80, canvas.height / 2);
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem("highScore", highScore);
+                    document.getElementById("highScore").textContent = "High Score: " + highScore;
+                }
+                return;
+            }
+            requestAnimationFrame(checkGameOver);
+        }
+
+        function startGame() {
+            gameStarted = true;
+            document.getElementById("difficultySection").style.display = "none"; // Hide difficulty section
+            document.getElementById("startButton").style.display = "none"; // Hide Start Button
+            updateGame();
+            checkGameOver();
+        }
+
+        function restartGame() {
+            score = 0;
+            stars = [];
+            isGameOver = false;
+            document.getElementById("score").textContent = "Score: " + score;
+            document.getElementById("restartButton").style.display = "none"; // Hide restart button
+            document.getElementById("difficultySection").style.display = "block"; // Show difficulty section after game over
+            updateGame();
+            checkGameOver();
+        }
+
+        setInterval(createStar, 1500);
+    </script>
+</body>
+</html>23

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureWeb</title>
+    <link rel="stylesheet" href="future.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FutureWeb</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>                                                        
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="section home-section">
+        <div class="container">
+            <h2>Welcome to FutureWeb</h2>
+            <p>Your journey into web development starts here!</p>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2>About Me</h2>
+            <p>"Welcome to FutureWeb! A space for web 
+                development projects, creativity, and 
+                innovation."</p>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container">
+            <h2>Projects</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <a href="project1.html"><h3>Project 1</h3></a>
+                    <p>A code editor for mac, pc and phone or tablet</p>
+                </div>
+                <div class="project-card">
+                    <a href="project2.html"><h3>Project 2</h3></a>
+                    <p>a website and app to learn coding</p>
+                </div>
+                <div class="project-card">
+                    <a href="project3.html"><h3>Project 3</h3></a>
+                    <p>A fun interactive game built with HTML, CSS, and JavaScript.</p>
+                </div>                      
+            </div>
+        </div>
+    </section>
+
+    <h2 class="contactus">Contact Us</h2>
+
+    <div class="contact-form">
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required placeholder="Enter your message" rows="4"></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            // Get form data
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            // You can add validation here if needed
+
+            // For now, let's just display an alert with the form data
+            alert(`Thank you for contacting us, ${name}! We have received your message:\n\n${message}\n\nWe will get back to you at ${email}.`);
+
+            // Optionally, clear the form after submission
+            document.getElementById("contactForm").reset();
+        });
+    </script>
+
+    <footer>
+        <div class="container">
+            <p>the 3rd website works only for computer(desktop)</p>
+            <p>&copy; 2025 My First Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
